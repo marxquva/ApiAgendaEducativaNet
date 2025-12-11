@@ -1,4 +1,5 @@
-﻿using ApiAgendaEducativaNet.Models.Entities;
+﻿using ApiAgendaEducativaNet.Models.Dtos;
+using ApiAgendaEducativaNet.Models.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -6,11 +7,11 @@ namespace ApiAgendaEducativaNet.Services.Interfaces
 {
     public interface IEmpresaService
     {
-        Task<IEnumerable<Empresa>> GetAllEmpresasAsync();
-        Task<Empresa> GetEmpresaByIdAsync(int id);
-        Task<Empresa> CreateEmpresaAsync(Empresa empresa);
-        Task<Empresa> UpdateEmpresaAsync(int id, Empresa empresa);
-        Task<bool> DeleteEmpresaAsync(int id);
-
+        Task<IEnumerable<EmpresaDTO>> ObtenerEmpresasAsync();
+        Task<EmpresaDTO> ObtenerEmpresaByIdAsync(int id);
+        Task<EmpresaDTO> CrearEmpresaAsync(Empresa empresa);
+        Task<EmpresaDTO> ActualizarEmpresaAsync(int id, Empresa empresa);
+        Task<bool> EliminarEmpresaAsync(int id);
     }
+
 }

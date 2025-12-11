@@ -22,92 +22,60 @@ namespace ApiAgendaEducativaNet.API.Controllers
 
 
         // GET api/empresa/listar
-        [HttpGet("Listar")]
-        public async Task<ActionResult<ApiResponse<IEnumerable<EmpresaDTO>>>> obtenerEmpresas()
+        [HttpGet("listar")]
+        public async Task<ActionResult<ApiResponse<IEnumerable<EmpresaDTO>>>> ObtenerEmpresas()
         {
-            var empresas = await _empresaService.GetAllEmpresasAsync();
-
-            var empresasDto = empresas.Select(e => new EmpresaDTO
-            {
-                IdEmpresa = e.IdEmpresa,
-                NombreEmpresa = e.NombreEmpresa,
-                Descripcion = e.Descripcion,
-                Imagen = e.Imagen,
-                Direccion = e.Direccion,
-                TipoEmpresaNombre = e.TipoEmpresa?.NombreTipoEmpresa
-            }).ToList();
-
-            return Ok(new ApiResponse<IEnumerable<EmpresaDTO>>(empresasDto));
+            var response = await _empresaService.ObtenerEmpresasAsync();
+            return Ok(new ApiResponse<IEnumerable<EmpresaDTO>>(response));
         }
 
 
-        // GET api/empresa/registro/5
-        [HttpGet("Registro/{id}")]
-        public async Task<ActionResult<ApiResponse<EmpresaDTO>>> obtenerEmpresaPorId(int id)
+        // GET api/empresa/item/5
+        [HttpGet("item/{id}")]
+        public async Task<ActionResult<ApiResponse<EmpresaDTO>>> ObtenerEmpresaPorId(int id)
         {
-            var empresa = await _empresaService.GetEmpresaByIdAsync(id);
-            if (empresa == null)
-                return NotFound(new ApiResponse<EmpresaDTO>("La empresa con ID " + id + " no existe"));
+            var response = await _empresaService.ObtenerEmpresaByIdAsync(id);
 
-            var empresaDto = new EmpresaDTO
-            {
-                IdEmpresa = empresa.IdEmpresa,
-                NombreEmpresa = empresa.NombreEmpresa,
-                Descripcion = empresa.Descripcion,
-                Imagen = empresa.Imagen,
-                Direccion = empresa.Direccion,
-                TipoEmpresaNombre = empresa.TipoEmpresa?.NombreTipoEmpresa
-            };
+            if (response == null)
+                return NotFound(new ApiResponse<EmpresaDTO>($"La empresa con ID {id} no existe"));
 
-            return Ok(new ApiResponse<EmpresaDTO>(empresaDto));
+            return Ok(new ApiResponse<EmpresaDTO>(response));
         }
 
 
-        // POST api/empresa/guardar
-        [HttpPost("Guardar")]
-        public async Task<ActionResult<ApiResponse<Empresa>>> crearEmpresa(Empresa empresa)
+        // POST api/empresa/crear
+        [HttpPost("crear")]
+        public async Task<ActionResult<ApiResponse<EmpresaDTO>>> CrearEmpresa([FromBody] Empresa empresa)
         {
-            var created = await _empresaService.CreateEmpresaAsync(empresa);
-            return CreatedAtAction(nameof(obtenerEmpresaPorId), new { id = created.IdEmpresa },
-                new ApiResponse<Empresa>(created));
+            var response = await _empresaService.CrearEmpresaAsync(empresa);
+
+            return CreatedAtAction(nameof(ObtenerEmpresaPorId),
+                new { id = response.IdEmpresa },
+                new ApiResponse<EmpresaDTO>(response));
         }
 
 
         // PUT api/empresa/modificar/5
-        [HttpPut("Modificar/{id}")]
+        [HttpPut("modificar/{id}")]
         public async Task<ActionResult<ApiResponse<EmpresaDTO>>> actualizarEmpresaPorId(int id, [FromBody] Empresa empresaActualizada)
         {
-            // Obtener la empresa existente
-            var empresaExistente = await _empresaService.GetEmpresaByIdAsync(id);
-            if (empresaExistente == null)
+            var response = await _empresaService.ActualizarEmpresaAsync(id, empresaActualizada);
+
+            if (response == null)
                 return NotFound(new ApiResponse<EmpresaDTO>($"La empresa con ID {id} no existe"));
 
-            // Actualizar los datos usando el servicio
-            var empresaModificada = await _empresaService.UpdateEmpresaAsync(id, empresaActualizada);
-
-            // Convertir a DTO
-            var empresaDto = new EmpresaDTO
-            {
-                IdEmpresa = empresaModificada.IdEmpresa,
-                NombreEmpresa = empresaModificada.NombreEmpresa,
-                Descripcion = empresaModificada.Descripcion,
-                Imagen = empresaModificada.Imagen,
-                Direccion = empresaModificada.Direccion,
-                TipoEmpresaNombre = empresaModificada.TipoEmpresa?.NombreTipoEmpresa
-            };
-
-            return Ok(new ApiResponse<EmpresaDTO>(empresaDto, "Empresa actualizada correctamente"));
+            return Ok(new ApiResponse<EmpresaDTO>(response, "Empresa actualizada correctamente"));
         }
 
 
 
-
         // DELETE api/empresa/eliminar/5
-        [HttpDelete("Eliminar/{id}")]
+        [HttpDelete("eliminar/{id}")]
         public async Task<ActionResult<ApiResponse<string>>> eliminarEmpresaPorId(int id)
         {
-            var deleted = await _empresaService.DeleteEmpresaAsync(id);
-            if (!deleted)
+            var eliminado = await _empresaService.EliminarEmpresaAsync(id);
+
+            if (!eliminado)
                 return NotFound(new ApiResponse<string>($"La empresa con ID {id} no existe"));
 
             return Ok(new ApiResponse<string>(null, "Empresa eliminada correctamente"));

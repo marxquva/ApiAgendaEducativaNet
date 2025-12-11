@@ -8,6 +8,7 @@ namespace ApiAgendaEducativaNet.Data.Repositories
 {
     public class EmpresaRepository : IEmpresaRepository
     {
+
         private readonly AplicacionDbContext _context;
 
         public EmpresaRepository(AplicacionDbContext context)
@@ -15,40 +16,43 @@ namespace ApiAgendaEducativaNet.Data.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Empresa>> GetAllAsync()
+        public async Task<IEnumerable<Empresa>> ObtenerEmpresasAsync()
         {
             return await _context.Empresas
                 .Include(e => e.TipoEmpresa)
                 .ToListAsync();
         }
 
-        public async Task<Empresa> GetByIdAsync(int id)
+        public async Task<Empresa> ObtenerEmpresaByIdAsync(int id)
         {
             return await _context.Empresas
                 .Include(e => e.TipoEmpresa)
                 .FirstOrDefaultAsync(e => e.IdEmpresa == id);
         }
 
-        public async Task AddAsync(Empresa empresa)
+        public async Task<Empresa> CrearEmpresaAsync(Empresa empresa)
         {
             await _context.Empresas.AddAsync(empresa);
             await _context.SaveChangesAsync();
+            return empresa;
         }
 
-        public async Task UpdateAsync(Empresa empresa)
+        public async Task<Empresa> ActualizarEmpresaAsync(Empresa empresa)
         {
             _context.Empresas.Update(empresa);
             await _context.SaveChangesAsync();
+            return empresa;
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task<bool> EliminarEmpresaAsync(int id)
         {
-            var empresa = await _context.Empresas.FindAsync(id);
-            if (empresa != null)
-            {
-                _context.Empresas.Remove(empresa);
-                await _context.SaveChangesAsync();
-            }
+            var entidad = await _context.Empresas.FindAsync(id);
+            if (entidad == null)
+                return false;
+
+            _context.Empresas.Remove(entidad);
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }

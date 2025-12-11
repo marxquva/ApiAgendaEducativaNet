@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ApiAgendaEducativaNet.Data.Repositories.Implementations;
 
 namespace ApiAgendaEducativaNet.API
 {
@@ -39,12 +40,14 @@ namespace ApiAgendaEducativaNet.API
             // 🔗 Registrar repositorios
             services.AddScoped<ITipoEmpresaRepository, TipoEmpresaRepository>();
             services.AddScoped<IEmpresaRepository, EmpresaRepository>();
-            
+            services.AddScoped<ITurnoRepository, TurnoRepository>();
+
 
             // 🔗 Registrar servicios
             services.AddScoped<ITipoEmpresaService, TipoEmpresaService>();
             services.AddScoped<IEmpresaService, EmpresaService>();
-            
+            services.AddScoped<ITurnoService, TurnoService>();
+
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

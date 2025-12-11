@@ -37,7 +37,7 @@ namespace ApiAgendaEducativaNet.Models.Entities
         [Column("fecha_modificacion")]
         public DateTime? FechaModificacion { get; set; }
 
-        // 🔗 Llave foránea explícita
+        // Llave foránea explícita
         [Column("id_tipo_empresa")]
         [ForeignKey(nameof(TipoEmpresa))]  // Indica que esta columna es la FK
         public int? IdTipoEmpresa { get; set; } = 2;

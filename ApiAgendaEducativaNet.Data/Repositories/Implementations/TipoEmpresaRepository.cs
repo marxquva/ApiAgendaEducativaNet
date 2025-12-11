@@ -15,31 +15,39 @@ namespace ApiAgendaEducativaNet.Data.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<TipoEmpresa>> GetAllAsync()
+        public async Task<IEnumerable<TipoEmpresa>> ObtenerTiposEmpresaAllAsync()
         {
             return await _context.TipoEmpresas.ToListAsync();
         }
 
-        public async Task<TipoEmpresa> GetByIdAsync(int id)
+        public async Task<TipoEmpresa> ObtenerTipoEmpresaByIdAsync(int id)
         {
             return await _context.TipoEmpresas.FindAsync(id);
         }
 
-        public async Task<TipoEmpresa> AddAsync(TipoEmpresa tipoEmpresa)
+        public async Task<TipoEmpresa> CrearTipoEmpresaAsync(TipoEmpresa tipoEmpresa)
         {
             _context.TipoEmpresas.Add(tipoEmpresa);
             await _context.SaveChangesAsync();
             return tipoEmpresa;
         }
 
-        public async Task<TipoEmpresa> UpdateAsync(TipoEmpresa tipoEmpresa)
+        public async Task<TipoEmpresa> ActualizarTipoEmpresaAsync(int id, TipoEmpresa tipoEmpresa)
         {
-            _context.TipoEmpresas.Update(tipoEmpresa);
+            var existente = await _context.TipoEmpresas.FindAsync(id);
+            if (existente == null) return null;
+
+            // Actualizar propiedades
+            existente.NombreTipoEmpresa = tipoEmpresa.NombreTipoEmpresa;
+            existente.Descripcion = tipoEmpresa.Descripcion;
+
             await _context.SaveChangesAsync();
-            return tipoEmpresa;
+            return existente;
         }
 
-        public async Task<bool> DeleteAsync(int id)
+
+
+        public async Task<bool> EliminarTipoEmpresaAsync(int id)
         {
             var entity = await _context.TipoEmpresas.FindAsync(id);
             if (entity == null) return false;

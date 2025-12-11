@@ -14,6 +14,7 @@ namespace ApiAgendaEducativaNet.Data.Context
         // DbSets representan tablas de la BD
         public DbSet<TipoEmpresa> TipoEmpresas { get; set; }
         public DbSet<Empresa> Empresas { get; set; }
+        public DbSet<Turno> Turnos { get; set; }
 
         // Configuración adicional del modelo (opcional)
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -23,6 +24,8 @@ namespace ApiAgendaEducativaNet.Data.Context
             // Ejemplo: configurar nombres de tablas explícitos
             modelBuilder.Entity<TipoEmpresa>().ToTable("sis_tipo_empresa");
             modelBuilder.Entity<Empresa>().ToTable("sis_empresa");
+            modelBuilder.Entity<Turno>().ToTable("ms_turno");
+
         }
     }
 }

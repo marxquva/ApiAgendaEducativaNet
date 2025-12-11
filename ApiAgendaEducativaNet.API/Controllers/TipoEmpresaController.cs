@@ -11,65 +11,57 @@ namespace ApiAgendaEducativaNet.API.Controllers
     [ApiController]
     public class TipoEmpresaController : ControllerBase
     {
-        private readonly ITipoEmpresaService _service;
+        private readonly ITipoEmpresaService _tipoEmpresaService;
 
         public TipoEmpresaController(ITipoEmpresaService service)
         {
-            _service = service;
+            _tipoEmpresaService = service;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<ApiResponse<IEnumerable<TipoEmpresa>>>> obtenerTiposempresa()
+        [HttpGet("listar")]
+        public async Task<ActionResult<ApiResponse<IEnumerable<TipoEmpresa>>>> ObtenerTiposempresa()
         {
-            var result = await _service.GetAllAsync();
+            var result = await _tipoEmpresaService.ObtenerTiposEmpresaAllAsync();
             //return Ok(result);
             return Ok(new ApiResponse<IEnumerable<TipoEmpresa>>(result));
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<ApiResponse<TipoEmpresa>>> obtenerTipoempresaPorId(int id)
+        [HttpGet("item/{id}")]
+        public async Task<ActionResult<ApiResponse<TipoEmpresa>>> ObtenerTipoempresaPorId(int id)
         {
-            var tipoEmpresa = await _service.GetByIdAsync(id);
+            var tipoEmpresa = await _tipoEmpresaService.ObtenerTipoEmpresaByIdAsync(id);
             if (tipoEmpresa == null)
                 return NotFound(new ApiResponse<TipoEmpresa>("El tipo de empresa con ID " + id + " no existe"));
             return Ok(new ApiResponse<TipoEmpresa>(tipoEmpresa));
         }
 
-        [HttpPost]
-        public async Task<ActionResult<ApiResponse<TipoEmpresa>>> crearTipoempresa(TipoEmpresa tipoEmpresa)
+        [HttpPost("crear")]
+        public async Task<ActionResult<ApiResponse<TipoEmpresa>>> CrearTipoEmpresa([FromBody] TipoEmpresa tipoEmpresa)
         {
-            var created = await _service.CreateAsync(tipoEmpresa);
-            return CreatedAtAction(nameof(obtenerTipoempresaPorId), new { id = created.IdTipoEmpresa },
-                new ApiResponse<TipoEmpresa>(created));
+            var response = await _tipoEmpresaService.CrearTipoEmpresaAsync(tipoEmpresa);
+
+            if (!response.Success)
+                return BadRequest(response);
+
+            return Ok(response);
         }
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult<ApiResponse<TipoEmpresa>>> actualizarTipoempresaPorId(int id, TipoEmpresa tipoEmpresa)
+        [HttpPut("actualizar/{id}")]
+        public async Task<ActionResult<ApiResponse<TipoEmpresa>>> ActualizarTipoEmpresa(int id, [FromBody] TipoEmpresa tipoEmpresa)
         {
-            // Obtener el registro existente
-            var existing = await _service.GetByIdAsync(id);
-            if (existing == null)
-            {
-                return NotFound(new ApiResponse<TipoEmpresa>($"El tipo de empresa con ID {id} no existe"));
-            }
+            var response = await _tipoEmpresaService.ActualizarTipoEmpresaAsync(id, tipoEmpresa);
 
-            // Actualizar solo los campos enviados
-            existing.NombreTipoEmpresa = tipoEmpresa.NombreTipoEmpresa;
-            existing.Descripcion = tipoEmpresa.Descripcion;
-            existing.Estado = tipoEmpresa.Estado;
-            existing.FechaModificacion = System.DateTime.Now;
+            if (!response.Success)
+                return BadRequest(response);
 
-            // Guardar cambios
-            var updated = await _service.UpdateAsync(existing);
-
-            return Ok(new ApiResponse<TipoEmpresa>(updated, "Tipo de empresa actualizada correctamente"));
+            return Ok(response);
         }
 
 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<ApiResponse<string>>> eliminarEmpresaPorId(int id)
+        [HttpDelete("eliminar/{id}")]
+        public async Task<ActionResult<ApiResponse<string>>> EliminarEmpresaPorId(int id)
         {
-            var deleted = await _service.DeleteAsync(id);
+            var deleted = await _tipoEmpresaService.EliminarTipoEmpresaAsync(id);
             if (!deleted)
                 return NotFound(new ApiResponse<string>($"El tipo de empresa con ID {id} no existe"));
 

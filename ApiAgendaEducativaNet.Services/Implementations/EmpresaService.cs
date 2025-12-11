@@ -1,7 +1,9 @@
 ﻿using ApiAgendaEducativaNet.Data.Repositories;
+using ApiAgendaEducativaNet.Models.Dtos;
 using ApiAgendaEducativaNet.Models.Entities;
 using ApiAgendaEducativaNet.Services.Interfaces;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ApiAgendaEducativaNet.Services.Implementations
@@ -15,54 +17,84 @@ namespace ApiAgendaEducativaNet.Services.Implementations
             _empresaRepository = empresaRepository;
         }
 
-        public async Task<IEnumerable<Empresa>> GetAllEmpresasAsync()
+        public async Task<IEnumerable<EmpresaDTO>> ObtenerEmpresasAsync()
         {
-            return await _empresaRepository.GetAllAsync();
+            var empresas = await _empresaRepository.ObtenerEmpresasAsync();
+
+            return empresas.Select(e => MapToDto(e));
         }
 
-        public async Task<Empresa> GetEmpresaByIdAsync(int id)
+        public async Task<EmpresaDTO> ObtenerEmpresaByIdAsync(int id)
         {
-            return await _empresaRepository.GetByIdAsync(id);
-        }
+            var empresa = await _empresaRepository.ObtenerEmpresaByIdAsync(id);
 
-        public async Task<Empresa> CreateEmpresaAsync(Empresa empresa)
-        {
-            await _empresaRepository.AddAsync(empresa);
-            return empresa; // Retornar la entidad creada
-        }
-
-
-        public async Task<Empresa> UpdateEmpresaAsync(int id, Empresa empresa)
-        {
-            // Buscar empresa existente
-            var existing = await _empresaRepository.GetByIdAsync(id);
-            if (existing == null)
+            if (empresa == null)
                 return null;
 
-            // Actualizar campos
-            existing.NombreEmpresa = empresa.NombreEmpresa;
-            existing.Descripcion = empresa.Descripcion;
-            existing.Imagen = empresa.Imagen;
-            existing.Direccion = empresa.Direccion;
-            existing.IdTipoEmpresa = empresa.IdTipoEmpresa;
-            existing.FechaModificacion = System.DateTime.Now;
-
-            await _empresaRepository.UpdateAsync(existing);
-
-            return existing;
+            return MapToDto(empresa);
         }
 
 
-        public async Task<bool> DeleteEmpresaAsync(int id)
+        public async Task<EmpresaDTO> CrearEmpresaAsync(Empresa empresa)
         {
-            var existing = await _empresaRepository.GetByIdAsync(id);
-            if (existing == null)
-                return false;
+            // Validar nombre duplicado
+            var existentes = await _empresaRepository.ObtenerEmpresasAsync();
+            if (existentes.Any(e => e.NombreEmpresa.ToLower() == empresa.NombreEmpresa.ToLower()))
+            {
+                return null; // El controlador devolverá el mensaje según tu lógica
+            }
 
-            // Llamar al repositorio pasando el ID
-            await _empresaRepository.DeleteAsync(id);
-            return true;
+            var creada = await _empresaRepository.CrearEmpresaAsync(empresa);
+
+            return MapToDto(creada);
         }
+
+        public async Task<EmpresaDTO> ActualizarEmpresaAsync(int id, Empresa empresa)
+        {
+            var existente = await _empresaRepository.ObtenerEmpresaByIdAsync(id);
+
+            if (existente == null)
+                return null;
+
+            // Validar nombre duplicado (excluyendo la empresa actual)
+            var empresas = await _empresaRepository.ObtenerEmpresasAsync();
+            if (empresas.Any(e =>
+                e.IdEmpresa != id &&
+                e.NombreEmpresa.ToLower() == empresa.NombreEmpresa.ToLower()))
+            {
+                return null;
+            }
+
+            // Actualizar campos permitidos
+            existente.NombreEmpresa = empresa.NombreEmpresa;
+            existente.Descripcion = empresa.Descripcion;
+            existente.Imagen = empresa.Imagen;
+            existente.Direccion = empresa.Direccion;
+            existente.IdTipoEmpresa = empresa.IdTipoEmpresa;
+
+            var actualizada = await _empresaRepository.ActualizarEmpresaAsync(existente);
+
+            return MapToDto(actualizada);
+        }
+
+        public Task<bool> EliminarEmpresaAsync(int id)
+            => _empresaRepository.EliminarEmpresaAsync(id);
+
+        private EmpresaDTO MapToDto(Empresa empresa)
+        {
+            if (empresa == null) return null;
+
+            return new EmpresaDTO
+            {
+                IdEmpresa = empresa.IdEmpresa,
+                NombreEmpresa = empresa.NombreEmpresa,
+                Descripcion = empresa.Descripcion,
+                Imagen = empresa.Imagen,
+                Direccion = empresa.Direccion,
+                TipoEmpresaNombre = empresa.TipoEmpresa?.NombreTipoEmpresa
+            };
+        }
+
 
 
     }
