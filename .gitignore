@@ -1,0 +1,79 @@
+# Build Folders
+bin/
+obj/
+
+# Visual Studio specific files
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider IDE files
+.idea/
+
+# NuGet Packages
+*.nupkg
+# The packages folder can be ignored because packages are restored
+packages/
+
+# Resharper
+_ReSharper*/
+*.ReSharper
+
+# DotCover
+*.dotCover
+
+# NCrunch
+_NCrunch_*
+.*crunch*.local.xml
+
+# Backup & report files from conversion tools
+*.backup
+*.ConvertLog.*
+
+# Others
+*.log
+*.tlog
+*.vspscc
+*.vssscc
+*.pdb
+*.cache
+*.ilk
+*.idb
+*.sdf
+*.dbmdl
+*.opendb
+*.VC.db
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# Publish related files
+*.Publish.xml
+*.pubxml
+*.publishproj
+
+# Azure Web App publish settings
+*.PublishSettings
+
+# StyleCop
+StyleCopReport.xml
+
+# DotCover
+*.dotCover
+
+# User-specific files
+*.suo
+*.user
+*.userprefs
+
+# Visual Studio Code workspace settings
+.vscode/
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.i
