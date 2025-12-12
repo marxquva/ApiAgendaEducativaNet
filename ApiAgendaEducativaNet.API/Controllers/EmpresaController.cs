@@ -23,48 +23,48 @@ namespace ApiAgendaEducativaNet.API.Controllers
 
         // GET api/empresa/listar
         [HttpGet("listar")]
-        public async Task<ActionResult<ApiResponse<IEnumerable<EmpresaDTO>>>> ObtenerEmpresas()
+        public async Task<ActionResult<ApiResponse<IEnumerable<EmpresaResponseDTO>>>> ObtenerEmpresas()
         {
             var response = await _empresaService.ObtenerEmpresasAsync();
-            return Ok(new ApiResponse<IEnumerable<EmpresaDTO>>(response));
+            return Ok(new ApiResponse<IEnumerable<EmpresaResponseDTO>>(response));
         }
 
 
         // GET api/empresa/item/5
         [HttpGet("item/{id}")]
-        public async Task<ActionResult<ApiResponse<EmpresaDTO>>> ObtenerEmpresaPorId(int id)
+        public async Task<ActionResult<ApiResponse<EmpresaResponseDTO>>> ObtenerEmpresaPorId(int id)
         {
             var response = await _empresaService.ObtenerEmpresaByIdAsync(id);
 
             if (response == null)
-                return NotFound(new ApiResponse<EmpresaDTO>($"La empresa con ID {id} no existe"));
+                return NotFound(new ApiResponse<EmpresaResponseDTO>($"La empresa con ID {id} no existe"));
 
-            return Ok(new ApiResponse<EmpresaDTO>(response));
+            return Ok(new ApiResponse<EmpresaResponseDTO>(response));
         }
 
 
         // POST api/empresa/crear
         [HttpPost("crear")]
-        public async Task<ActionResult<ApiResponse<EmpresaDTO>>> CrearEmpresa([FromBody] Empresa empresa)
+        public async Task<ActionResult<ApiResponse<EmpresaResponseDTO>>> CrearEmpresa([FromBody] Empresa empresa)
         {
             var response = await _empresaService.CrearEmpresaAsync(empresa);
 
             return CreatedAtAction(nameof(ObtenerEmpresaPorId),
                 new { id = response.IdEmpresa },
-                new ApiResponse<EmpresaDTO>(response));
+                new ApiResponse<EmpresaResponseDTO>(response));
         }
 
 
         // PUT api/empresa/modificar/5
         [HttpPut("modificar/{id}")]
-        public async Task<ActionResult<ApiResponse<EmpresaDTO>>> actualizarEmpresaPorId(int id, [FromBody] Empresa empresaActualizada)
+        public async Task<ActionResult<ApiResponse<EmpresaResponseDTO>>> actualizarEmpresaPorId(int id, [FromBody] Empresa empresaActualizada)
         {
             var response = await _empresaService.ActualizarEmpresaAsync(id, empresaActualizada);
 
             if (response == null)
-                return NotFound(new ApiResponse<EmpresaDTO>($"La empresa con ID {id} no existe"));
+                return NotFound(new ApiResponse<EmpresaResponseDTO>($"La empresa con ID {id} no existe"));
 
-            return Ok(new ApiResponse<EmpresaDTO>(response, "Empresa actualizada correctamente"));
+            return Ok(new ApiResponse<EmpresaResponseDTO>(response, "Empresa actualizada correctamente"));
         }
 
 

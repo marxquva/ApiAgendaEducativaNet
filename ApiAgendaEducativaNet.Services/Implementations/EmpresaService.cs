@@ -17,14 +17,14 @@ namespace ApiAgendaEducativaNet.Services.Implementations
             _empresaRepository = empresaRepository;
         }
 
-        public async Task<IEnumerable<EmpresaDTO>> ObtenerEmpresasAsync()
+        public async Task<IEnumerable<EmpresaResponseDTO>> ObtenerEmpresasAsync()
         {
             var empresas = await _empresaRepository.ObtenerEmpresasAsync();
 
             return empresas.Select(e => MapToDto(e));
         }
 
-        public async Task<EmpresaDTO> ObtenerEmpresaByIdAsync(int id)
+        public async Task<EmpresaResponseDTO> ObtenerEmpresaByIdAsync(int id)
         {
             var empresa = await _empresaRepository.ObtenerEmpresaByIdAsync(id);
 
@@ -35,7 +35,7 @@ namespace ApiAgendaEducativaNet.Services.Implementations
         }
 
 
-        public async Task<EmpresaDTO> CrearEmpresaAsync(Empresa empresa)
+        public async Task<EmpresaResponseDTO> CrearEmpresaAsync(Empresa empresa)
         {
             // Validar nombre duplicado
             var existentes = await _empresaRepository.ObtenerEmpresasAsync();
@@ -49,7 +49,7 @@ namespace ApiAgendaEducativaNet.Services.Implementations
             return MapToDto(creada);
         }
 
-        public async Task<EmpresaDTO> ActualizarEmpresaAsync(int id, Empresa empresa)
+        public async Task<EmpresaResponseDTO> ActualizarEmpresaAsync(int id, Empresa empresa)
         {
             var existente = await _empresaRepository.ObtenerEmpresaByIdAsync(id);
 
@@ -80,11 +80,11 @@ namespace ApiAgendaEducativaNet.Services.Implementations
         public Task<bool> EliminarEmpresaAsync(int id)
             => _empresaRepository.EliminarEmpresaAsync(id);
 
-        private EmpresaDTO MapToDto(Empresa empresa)
+        private EmpresaResponseDTO MapToDto(Empresa empresa)
         {
             if (empresa == null) return null;
 
-            return new EmpresaDTO
+            return new EmpresaResponseDTO
             {
                 IdEmpresa = empresa.IdEmpresa,
                 NombreEmpresa = empresa.NombreEmpresa,

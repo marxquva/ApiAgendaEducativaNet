@@ -7,10 +7,10 @@ namespace ApiAgendaEducativaNet.Services.Interfaces
 {
     public interface IEmpresaService
     {
-        Task<IEnumerable<EmpresaDTO>> ObtenerEmpresasAsync();
-        Task<EmpresaDTO> ObtenerEmpresaByIdAsync(int id);
-        Task<EmpresaDTO> CrearEmpresaAsync(Empresa empresa);
-        Task<EmpresaDTO> ActualizarEmpresaAsync(int id, Empresa empresa);
+        Task<IEnumerable<EmpresaResponseDTO>> ObtenerEmpresasAsync();
+        Task<EmpresaResponseDTO> ObtenerEmpresaByIdAsync(int id);
+        Task<EmpresaResponseDTO> CrearEmpresaAsync(Empresa empresa);
+        Task<EmpresaResponseDTO> ActualizarEmpresaAsync(int id, Empresa empresa);
         Task<bool> EliminarEmpresaAsync(int id);
     }
 

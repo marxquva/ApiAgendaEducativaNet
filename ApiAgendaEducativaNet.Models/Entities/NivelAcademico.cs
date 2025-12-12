@@ -22,9 +22,10 @@ namespace ApiAgendaEducativaNet.Models.Entities
         [Column("estado")]
         public int Estado { get; set; } = 1;
 
-        // Llave foránea explícita
-        [Column("id_empresa")]
-        [ForeignKey(nameof(Empresa))]  // Indica que esta columna es la FK
+        [Column("id_empresa_fk")]
         public int? IdEmpresa { get; set; }
+
+        [ForeignKey("IdEmpresa")]
+        public virtual Empresa Empresa { get; set; }
     }
 }

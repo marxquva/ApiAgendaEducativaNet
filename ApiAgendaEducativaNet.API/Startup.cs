@@ -4,18 +4,11 @@ using ApiAgendaEducativaNet.Services.Interfaces;
 using ApiAgendaEducativaNet.Services.Implementations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using ApiAgendaEducativaNet.Data.Repositories.Implementations;
 
 namespace ApiAgendaEducativaNet.API
@@ -41,12 +34,14 @@ namespace ApiAgendaEducativaNet.API
             services.AddScoped<ITipoEmpresaRepository, TipoEmpresaRepository>();
             services.AddScoped<IEmpresaRepository, EmpresaRepository>();
             services.AddScoped<ITurnoRepository, TurnoRepository>();
+            services.AddScoped<INivelAcademicoRepository, NivelAcademicoRepository>();
 
 
             // 🔗 Registrar servicios
             services.AddScoped<ITipoEmpresaService, TipoEmpresaService>();
             services.AddScoped<IEmpresaService, EmpresaService>();
             services.AddScoped<ITurnoService, TurnoService>();
+            services.AddScoped<INivelAcademicoService, NivelAcademicoService>();
 
 
             services.AddControllers();
