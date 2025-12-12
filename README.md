@@ -1,5 +1,5 @@
 
-# ⚽ API Agenda Educativa – .NET Core / Entity Framework
+# 🎓 API Agenda Educativa – .NET Core / Entity Framework
 Esta API RESTful está diseñada para gestionar una agenda educativa completa, permitiendo administrar todos los procesos relacionados con el año académico.
 El sistema facilita la organización de aulas, registro de personas, matrículas, asignación de profesores, envío de mensajes, gestión de eventos y control de aportes económicos.
 
