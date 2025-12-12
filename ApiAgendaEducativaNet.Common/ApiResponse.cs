@@ -11,19 +11,21 @@ namespace ApiAgendaEducativaNet.Common
         public bool Success { get; set; }     // Estado de la respuesta
         public string Message { get; set; }   // Mensaje para el cliente
         public T Data { get; set; }           // Carga útil
+        public Dictionary<string, string[]> Errors { get; set; }
 
         public ApiResponse(T data, string message = "Operación realizada con éxito")
         {
             Success = true;
             Message = message;
             Data = data;
+            Errors = null;
         }
-
-        public ApiResponse(string message)
+        public ApiResponse(string message, Dictionary<string, string[]> errors = null)
         {
             Success = false;
             Message = message;
             Data = default(T);
+            Errors = errors;
         }
     }
 }

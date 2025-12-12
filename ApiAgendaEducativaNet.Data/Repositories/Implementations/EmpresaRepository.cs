@@ -20,13 +20,16 @@ namespace ApiAgendaEducativaNet.Data.Repositories
         {
             return await _context.Empresas
                 .Include(e => e.TipoEmpresa)
+                .Include(e => e.NivelesAcademicos)
                 .ToListAsync();
         }
+
 
         public async Task<Empresa> ObtenerEmpresaByIdAsync(int id)
         {
             return await _context.Empresas
                 .Include(e => e.TipoEmpresa)
+                .Include(e => e.NivelesAcademicos)
                 .FirstOrDefaultAsync(e => e.IdEmpresa == id);
         }
 

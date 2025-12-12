@@ -44,5 +44,8 @@ namespace ApiAgendaEducativaNet.Models.Entities
 
         // Navegación
         public TipoEmpresa TipoEmpresa { get; set; }
+
+        public virtual ICollection<NivelAcademico> NivelesAcademicos { get; set; } = new List<NivelAcademico>();
+
     }
 }

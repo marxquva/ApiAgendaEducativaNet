@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ApiAgendaEducativaNet.Models.Dtos.Response;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,8 @@ namespace ApiAgendaEducativaNet.Models.Dtos
         public string TipoEmpresaNombre { get; set; }
         public string Imagen { get; set; }
         public string Direccion { get; set; }
+
+        public List<NivelAcademicoResponseDTO> NivelesAcademicos { get; set; } = new List<NivelAcademicoResponseDTO>();
     }
 
 }

@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using ApiAgendaEducativaNet.Data.Repositories.Implementations;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ApiAgendaEducativaNet.API
 {
@@ -42,6 +43,11 @@ namespace ApiAgendaEducativaNet.API
             services.AddScoped<IEmpresaService, EmpresaService>();
             services.AddScoped<ITurnoService, TurnoService>();
             services.AddScoped<INivelAcademicoService, NivelAcademicoService>();
+
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
 
 
             services.AddControllers();

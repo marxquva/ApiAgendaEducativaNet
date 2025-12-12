@@ -1,6 +1,7 @@
 ﻿using ApiAgendaEducativaNet.Common;
 using ApiAgendaEducativaNet.Data.Repositories;
 using ApiAgendaEducativaNet.Models.Dtos;
+using ApiAgendaEducativaNet.Models.Dtos.Request;
 using ApiAgendaEducativaNet.Models.Dtos.Response;
 using ApiAgendaEducativaNet.Models.Entities;
 using ApiAgendaEducativaNet.Services.Interfaces;
@@ -31,51 +32,69 @@ namespace ApiAgendaEducativaNet.Services.Implementations
             return MapToDto(nivel);
         }
 
-        public async Task<ApiResponse<NivelAcademicoResponseDTO>> CrearNivelAcademicoAsync(NivelAcademico nivel)
+        public async Task<ApiResponse<NivelAcademicoResponseDTO>> CrearNivelAcademicoAsync(NivelAcademicoRequestDTO dto)
         {
-            var existentes = await _nivelRepository.ObtenerNivelesAcademicosAsync();
-
-            if (existentes.Any(n =>
-                n.IdEmpresa == nivel.IdEmpresa &&
-                n.Nombre.ToLower() == nivel.Nombre.ToLower()))
+            // Validación de duplicados
+            var niveles = await _nivelRepository.ObtenerNivelesAcademicosAsync();
+            if (niveles.Any(n =>
+                n.IdEmpresa == dto.IdEmpresa &&
+                n.Nombre.ToLower() == dto.Nombre.ToLower()))
             {
                 return new ApiResponse<NivelAcademicoResponseDTO>(
-                    $"El nombre del nivel académico '{nivel.Nombre}' ya existe para esta empresa."
+                    $"El nombre '{dto.Nombre}' ya está registrado en esta empresa.",
+                    new Dictionary<string, string[]> { { "Nombre", new[] { $"El nombre '{dto.Nombre}' ya está registrado en esta empresa." } } }
                 );
             }
 
+            var nivel = new NivelAcademico
+            {
+                Nombre = dto.Nombre,
+                Descripcion = dto.Descripcion,
+                Estado = dto.Estado,
+                IdEmpresa = dto.IdEmpresa
+            };
+
             var creado = await _nivelRepository.CrearNivelAcademicoAsync(nivel);
+
             return new ApiResponse<NivelAcademicoResponseDTO>(MapToDto(creado));
         }
 
-        public async Task<ApiResponse<NivelAcademicoResponseDTO>> ActualizarNivelAcademicoAsync(int id, NivelAcademico nivel)
+
+        public async Task<ApiResponse<NivelAcademicoResponseDTO>> ActualizarNivelAcademicoAsync(int id, NivelAcademicoRequestDTO dto)
         {
             var existente = await _nivelRepository.ObtenerNivelAcademicoByIdAsync(id);
 
             if (existente == null)
-                return new ApiResponse<NivelAcademicoResponseDTO>("El nivel académico no existe.");
+                return new ApiResponse<NivelAcademicoResponseDTO>(
+                    $"El nivel académico no existe.",
+                    new Dictionary<string, string[]> { { "Id", new[] { $"El nivel académico no existe." } } }
+                );
+            //return new ApiResponse<NivelAcademicoResponseDTO>("El nivel académico no existe.");
 
+            // Validación duplicados
             var niveles = await _nivelRepository.ObtenerNivelesAcademicosAsync();
             if (niveles.Any(n =>
                 n.IdNivelAcademico != id &&
-                n.IdEmpresa == nivel.IdEmpresa &&
-                n.Nombre.ToLower() == nivel.Nombre.ToLower()))
+                n.IdEmpresa == dto.IdEmpresa &&
+                n.Nombre.ToLower() == dto.Nombre.ToLower()))
             {
                 return new ApiResponse<NivelAcademicoResponseDTO>(
-                    $"El nombre '{nivel.Nombre}' ya existe para esta empresa."
+                    $"El nombre '{dto.Nombre}' ya está registrado en esta empresa.",
+                    new Dictionary<string, string[]> { { "Nombre", new[] { $"El nombre '{dto.Nombre}' ya está registrado en esta empresa." } } }
                 );
+
             }
 
-            // Actualizar
-            existente.Nombre = nivel.Nombre;
-            existente.Descripcion = nivel.Descripcion;
-            existente.Estado = nivel.Estado;
-            existente.IdEmpresa = nivel.IdEmpresa;
+            existente.Nombre = dto.Nombre;
+            existente.Descripcion = dto.Descripcion;
+            existente.Estado = dto.Estado;
+            existente.IdEmpresa = dto.IdEmpresa;
 
             var actualizado = await _nivelRepository.ActualizarNivelAcademicoAsync(existente);
 
             return new ApiResponse<NivelAcademicoResponseDTO>(MapToDto(actualizado));
         }
+
 
         public Task<bool> EliminarNivelAcademicoAsync(int id)
             => _nivelRepository.EliminarNivelAcademicoAsync(id);

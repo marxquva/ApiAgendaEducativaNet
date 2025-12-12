@@ -1,4 +1,5 @@
 ﻿using ApiAgendaEducativaNet.Common;
+using ApiAgendaEducativaNet.Models.Dtos.Request;
 using ApiAgendaEducativaNet.Models.Dtos.Response;
 using ApiAgendaEducativaNet.Models.Entities;
 using System;
@@ -13,8 +14,8 @@ namespace ApiAgendaEducativaNet.Services.Interfaces
     {
         Task<IEnumerable<NivelAcademicoResponseDTO>> ObtenerNivelesAcademicosAsync();
         Task<NivelAcademicoResponseDTO> ObtenerNivelAcademicoByIdAsync(int id);
-        Task<ApiResponse<NivelAcademicoResponseDTO>> CrearNivelAcademicoAsync(NivelAcademico nivel);
-        Task<ApiResponse<NivelAcademicoResponseDTO>> ActualizarNivelAcademicoAsync(int id, NivelAcademico nivel);
+        Task<ApiResponse<NivelAcademicoResponseDTO>> CrearNivelAcademicoAsync(NivelAcademicoRequestDTO nivel);
+        Task<ApiResponse<NivelAcademicoResponseDTO>> ActualizarNivelAcademicoAsync(int id, NivelAcademicoRequestDTO nivel);
         Task<bool> EliminarNivelAcademicoAsync(int id);
     }
 }

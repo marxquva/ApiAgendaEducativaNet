@@ -1,5 +1,6 @@
 ﻿using ApiAgendaEducativaNet.Data.Repositories;
 using ApiAgendaEducativaNet.Models.Dtos;
+using ApiAgendaEducativaNet.Models.Dtos.Response;
 using ApiAgendaEducativaNet.Models.Entities;
 using ApiAgendaEducativaNet.Services.Interfaces;
 using System.Collections.Generic;
@@ -20,9 +21,9 @@ namespace ApiAgendaEducativaNet.Services.Implementations
         public async Task<IEnumerable<EmpresaResponseDTO>> ObtenerEmpresasAsync()
         {
             var empresas = await _empresaRepository.ObtenerEmpresasAsync();
-
             return empresas.Select(e => MapToDto(e));
         }
+
 
         public async Task<EmpresaResponseDTO> ObtenerEmpresaByIdAsync(int id)
         {
@@ -41,7 +42,7 @@ namespace ApiAgendaEducativaNet.Services.Implementations
             var existentes = await _empresaRepository.ObtenerEmpresasAsync();
             if (existentes.Any(e => e.NombreEmpresa.ToLower() == empresa.NombreEmpresa.ToLower()))
             {
-                return null; // El controlador devolverá el mensaje según tu lógica
+                return null;
             }
 
             var creada = await _empresaRepository.CrearEmpresaAsync(empresa);
@@ -91,9 +92,20 @@ namespace ApiAgendaEducativaNet.Services.Implementations
                 Descripcion = empresa.Descripcion,
                 Imagen = empresa.Imagen,
                 Direccion = empresa.Direccion,
-                TipoEmpresaNombre = empresa.TipoEmpresa?.NombreTipoEmpresa
+                TipoEmpresaNombre = empresa.TipoEmpresa?.NombreTipoEmpresa,
+                NivelesAcademicos = empresa.NivelesAcademicos?
+                    .Select(n => new NivelAcademicoResponseDTO
+                    {
+                        IdNivelAcademico = n.IdNivelAcademico,
+                        Nombre = n.Nombre,
+                        Descripcion = n.Descripcion,
+                        Estado = n.Estado,
+                        EmpresaNombre = empresa.NombreEmpresa
+            }).ToList() ?? new List<NivelAcademicoResponseDTO>()
             };
         }
+
+
 
 
 
