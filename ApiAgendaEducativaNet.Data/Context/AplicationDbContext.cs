@@ -16,6 +16,7 @@ namespace ApiAgendaEducativaNet.Data.Context
         public DbSet<Empresa> Empresas { get; set; }
         public DbSet<Turno> Turnos { get; set; }
         public DbSet<NivelAcademico> NivelesAcademicos { get; set; }
+        public DbSet<Periodo> Periodos { get; set; }
 
         // Configuración adicional del modelo (opcional)
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -27,6 +28,7 @@ namespace ApiAgendaEducativaNet.Data.Context
             modelBuilder.Entity<Empresa>().ToTable("sis_empresa");
             modelBuilder.Entity<Turno>().ToTable("ms_turno");
             modelBuilder.Entity<NivelAcademico>().ToTable("ms_nivel_academico");
+            modelBuilder.Entity<Periodo>().ToTable("sis_anio_academico");
 
         }
     }

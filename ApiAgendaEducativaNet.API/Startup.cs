@@ -9,8 +9,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using ApiAgendaEducativaNet.Data.Repositories.Interfaces;
 using ApiAgendaEducativaNet.Data.Repositories.Implementations;
 using Microsoft.AspNetCore.Mvc;
+
+
 
 namespace ApiAgendaEducativaNet.API
 {
@@ -36,6 +39,7 @@ namespace ApiAgendaEducativaNet.API
             services.AddScoped<IEmpresaRepository, EmpresaRepository>();
             services.AddScoped<ITurnoRepository, TurnoRepository>();
             services.AddScoped<INivelAcademicoRepository, NivelAcademicoRepository>();
+            services.AddScoped<IPeriodoRepository, PeriodoRepository>();
 
 
             // 🔗 Registrar servicios
@@ -43,6 +47,7 @@ namespace ApiAgendaEducativaNet.API
             services.AddScoped<IEmpresaService, EmpresaService>();
             services.AddScoped<ITurnoService, TurnoService>();
             services.AddScoped<INivelAcademicoService, NivelAcademicoService>();
+            services.AddScoped<IPeriodoService, PeriodoService>();
 
             services.Configure<ApiBehaviorOptions>(options =>
             {
